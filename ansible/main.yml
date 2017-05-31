@@ -34,5 +34,14 @@
   - name: install docker
     apt: name=docker-engine state=latest
 
+  - name: new systemd docker service file
+    template: src=docker.service dest=/lib/systemd/system/docker.service owner=root group=root mode=0644
+
+  - name: reload systemd daemon 
+    raw: systemctl daemon-reload
+
+  - name: add ubuntu user to docker group
+    user: name=ubuntu groups=docker append=yes
+
   - name: ensure docker is running (and enable it at boot)
     service: name=docker state=started enabled=yes
