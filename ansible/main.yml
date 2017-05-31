@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  become: yes
+  remote_user: ubuntu
+  gather_facts: no
+  tasks:
+  - name: update apt cache
+    apt: update_cache=yes
+
+  - name: install latest hwe kernel
+    raw: sudo apt-get install -y linux-generic-hwe-16.04
+
+  - name: add git repo
+    apt_repository: repo='ppa:git-core/ppa'
+
+  - name: install editors and git
+    apt: name={{ item  }} state=latest
+    with_items:
+      - vim
+      - git
+
+  - name: install docker pre-reqs
+    apt: name={{ item  }} state=latest
+    with_items:
+      - apt-transport-https
+      - ca-certificates
+
+  - name: add docker repo key
+    apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+
+  - name: add docker repo
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present
+
+  - name: install docker
+    apt: name=docker-engine state=latest
+
+  - name: ensure docker is running (and enable it at boot)
+    service: name=docker state=started enabled=yes
