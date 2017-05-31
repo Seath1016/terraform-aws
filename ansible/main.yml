@@ -45,3 +45,6 @@
 
   - name: ensure docker is running (and enable it at boot)
     service: name=docker state=started enabled=yes
+
+  - name: restart docker for everything to take effect
+    raw: systemctl restart docker
