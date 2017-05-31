@@ -1,6 +1,6 @@
-#terraform-aws
+# terraform-aws
 
-## Purpose 
+## Purpose
 This project defines a Docker host using Terraform
 
 ## Goals
